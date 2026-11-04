@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ArrowDown, Smile } from "lucide-react";
 import { heroCaptions as captions } from "../data/portfolio";
-import { profilePortrait, galleryImages } from "../assets/images";
+import { ArrowDown, Smile } from "lucide-react";
+import { profilePortrait } from "../assets/images";
 
 export default function Hero() {
   const [caption, setCaption] = useState(0);
@@ -37,10 +37,7 @@ export default function Hero() {
             A few different hats. One very curious head.
           </span>
         </div>
-        <div
-          className="hero-art"
-          aria-label="My profile portrait alongside my photography"
-        >
+        <div className="hero-art" aria-label="My profile portrait">
           <div className="art-grid" aria-hidden="true" />
           <div className="art-orbit" aria-hidden="true" />
           <div className="art-photo photo-main profile-card">
@@ -53,13 +50,7 @@ export default function Hero() {
             />
             <span>HENRIQUE / A.K.A. QUIIQUE</span>
           </div>
-          <div className="art-photo photo-secondary">
-            <img
-              src={galleryImages[104276991]}
-              alt="Carina, photographed in a botanic garden"
-            />
-            <span>A DIFFERENT PERSPECTIVE.</span>
-          </div>
+
           <button
             className="smile-sticker"
             onClick={() => setCaption((caption + 1) % captions.length)}

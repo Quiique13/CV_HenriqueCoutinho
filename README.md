@@ -1,6 +1,6 @@
 # Quiique — Henrique Coutinho
 
-A personal portfolio built with React, TypeScript, and Vite. The visual direction combines warm paper, ink, orange, editorial typography, and an abstract photography collage.
+A personal portfolio built with React, TypeScript, and Vite. The visual direction combines warm paper, ink, orange, editorial typography, and a framed profile portrait.
 
 ## Run locally
 
@@ -20,11 +20,12 @@ The build checks TypeScript and generates `dist/`. Preview serves that productio
 
 ## What is included
 
-- Responsive navigation, a photography collage, and a small interactive smile sticker.
+- Responsive navigation and a hero featuring Henrique's framed profile portrait with playful accents.
 - An introduction and seven education/career milestones.
-- savingsOS and PetStay project details, with links to their repositories.
-- Eight locally stored collection covers from Henrique's Behance portfolio.
-- Gallery filters and a modal image viewer with previous/next buttons, arrow-key navigation, Escape dismissal, and native dialog focus management.
+- savingsOS, PetStay, and BattleCraft coding project details, with links to their repositories.
+- All 33 publicly listed Behance projects, with locally stored covers and 137 images, grouped into separate project galleries.
+- 18 embedded videos across 13 projects, including Adobe-hosted films and the YouTube-hosted 25FJ project.
+- Photography, Design, and Film & sound filters, media counts, a return-to-projects action, and a modal image viewer with navigation within each project, arrow keys, Escape dismissal, and native dialog focus management.
 - Email contact and copy-to-clipboard, with a fallback message if clipboard permission is unavailable.
 - Locally bundled fonts, reduced-motion support, skip navigation, and page metadata.
 
@@ -61,32 +62,35 @@ Local state stays with its section: navigation in Header, the playful caption in
 
 ## Edit the content
 
-| File                        | Purpose                                                      |
-| --------------------------- | ------------------------------------------------------------ |
-| `src/data/portfolio.ts`     | Projects, timeline, email, captions, and photo descriptions. |
-| `src/data/photography.json` | Behance source URLs and image filenames.                     |
-| `src/assets/images/`        | Profile portrait and gallery images.                         |
-| `src/assets/images.ts`      | Image imports processed by Vite.                             |
-| `src/components/`           | Individual page sections and reusable UI.                    |
-| `src/hooks/`                | Reusable state and browser lifecycle logic.                  |
-| `src/context/`              | Shared photo/project overlay state and provider.             |
-| `src/services/`             | Browser integration calls.                                   |
-| `src/utils/`                | Pure formatting and collection helpers.                      |
-| `src/App.tsx`               | Top-level provider and section ordering.                     |
-| `src/App.css`               | Component appearance and responsive layouts.                 |
-| `src/index.css`             | Fonts, palette, and base styles.                             |
-| `index.html`                | Browser title, description, and social metadata.             |
+| File                        | Purpose                                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| `src/data/portfolio.ts`     | Typed gallery content, coding projects, timeline, email, and captions.                    |
+| `src/data/photography.json` | Full Behance project manifest, descriptions, categories, image sources, and video embeds. |
+| `src/assets/images/`        | Profile portrait and gallery images.                                                      |
+| `src/assets/images.ts`      | Image imports processed by Vite.                                                          |
+| `src/components/`           | Individual page sections and reusable UI.                                                 |
+| `src/hooks/`                | Reusable state and browser lifecycle logic.                                               |
+| `src/context/`              | Shared photo/project overlay state and provider.                                          |
+| `src/services/`             | Browser integration calls.                                                                |
+| `src/utils/`                | Pure formatting and collection helpers.                                                   |
+| `src/App.tsx`               | Top-level provider and section ordering.                                                  |
+| `src/App.css`               | Component appearance and responsive layouts.                                              |
+| `src/index.css`             | Fonts, palette, and base styles.                                                          |
+| `index.html`                | Browser title, description, and social metadata.                                          |
 
 The timeline contains sourced education and work milestones. Add personal life events to `timeline` when you decide which ones belong on the public website. Update the current role when it changes.
 
-The gallery uses downloaded Behance collection-cover images; each viewer links to the full original collection. The showreel opens its project on Behance, where the video can be watched. Project covers are original decorative illustrations for this portfolio, rather than application screenshots or original project logos. The contact link opens the visitor's email client.
+The gallery includes all 33 public projects listed on [Henrique's Behance profile](https://www.behance.net/henriqueCosta), checked through the final pagination page on 4 November 2026. This is a local snapshot; new Behance projects must be added to the manifest and their image assets imported. Selecting a cover opens that project's images, videos, and original project notes, including concept disclaimers and creative credits. Selecting an image opens the viewer, whose arrows stay within the same project. Returning to the overview preserves the category filter and restores focus to the selected cover. Each project and viewer links to its original Behance page. Project images are stored in `src/assets/images/photography/<project-id>/` and covers in `src/assets/images/behance/` as WebP files, loaded lazily, and displayed at their original aspect ratios. Their Behance source URLs, local filenames, and dimensions are retained in `src/data/photography.json`. The savingsOS project cover and details use the logo supplied by Henrique. The PetStay cover is a decorative illustration for this portfolio. The contact link opens the visitor's email client.
+
+Videos use the existing Adobe players and a privacy-enhanced YouTube embed, so no manual video import is needed for the current portfolio. Players are only mounted inside the selected project, load lazily, support fullscreen, and are removed when leaving the project. The two versions of Disconnected retain their Portuguese and English labels. A visible "Watch on Behance" link accompanies each player. Adobe streaming URLs expire, so the app stores the stable player embed URLs rather than direct MP4 or HLS URLs. If videos should be hosted independently of Adobe and YouTube, their original video files would be needed; they are not included in this repository.
 
 ## Content sources
 
 - Career and education: privately supplied CV, updated 9 October 2026. Personal phone numbers, third-party references, and the original document link are omitted from the public repository.
 - Photography and creative collections: [Henrique Costa on Behance](https://www.behance.net/henriqueCosta). Exact collection and image source URLs are retained in `src/data/photography.json`.
-- Profile portrait: the original image supplied by Henrique, stored at `src/assets/images/henrique-profile.png` and featured in the hero collage.
-- Project descriptions: [savingsOS README](https://github.com/Quiique13/SavingsOS#readme) and [PetStay README](https://github.com/Quiique13/PetStay#readme).
+- Profile portrait: the original image supplied by Henrique, stored at `src/assets/images/henrique-profile.png` and featured in the hero section.
+- savingsOS logo: the supplied vector file, stored at `src/assets/images/savingsOS.svg`.
+- Project descriptions: [savingsOS README](https://github.com/Quiique13/SavingsOS#readme), [PetStay README](https://github.com/Quiique13/PetStay#readme), and [BattleCraft README](https://github.com/wlfz/BattleCraft#readme). BattleCraft's stack is based on its Gemfile and package.json; its repository is private and the project dialog labels the link accordingly. The trading-card cover is a decorative illustration created for this portfolio.
 - DM Sans and Space Mono are bundled under the SIL Open Font License; license files are in `public/fonts/`.
 
 ## Technology options considered
@@ -106,4 +110,4 @@ Official references: [React](https://react.dev/learn), [Jekyll](https://jekyllrb
 
 ## Verification
 
-The production build includes TypeScript checking. A before/after server-render comparison verified identical page markup apart from image asset locations. Server-rendered checks also verified both project dialogs, filtered gallery details, image availability, and wraparound navigation. Browser automation was unavailable during this session, so visual layout and interactive behavior still need manual browser verification. This local project has not been deployed.
+The production build includes TypeScript checking. Build and ESLint checks pass. DOM integration checks verified that the gallery matches the complete 33-project public listing, all 137 images open, all 18 video iframes have stable source URLs and fallback links, video players are removed when leaving a project, and category filters and keyboard focus persist when returning to the overview. Image navigation, wraparound, arrow keys, counts, and local image dimensions also passed. Availability checks confirmed that all 17 Adobe video streams respond and YouTube provides an embed for 25FJ. The DOM checks used a simulated dialog API and do not test actual video playback, native browser dialog behavior, or visual layout. This local project has not been deployed.

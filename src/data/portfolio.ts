@@ -1,65 +1,82 @@
-import photographs from "./photography.json";
-import { galleryImages } from "../assets/images";
+import behanceProjects from "./photography.json";
+import {
+  galleryImages,
+  galleryPhotoImages,
+  savingsOSLogo,
+} from "../assets/images";
 
-export type GalleryCategory =
-  | "All"
-  | "Portraits"
-  | "Experiments"
-  | "Design & film";
-const photoDetails: Record<
-  number,
-  { title: string; category: Exclude<GalleryCategory, "All">; alt: string }
-> = {
-  104276991: {
-    title: "Carina — Botanic Garden",
-    category: "Portraits",
-    alt: "Carina surrounded by foliage and flowers in a botanic garden",
-  },
-  99042381: {
-    title: "Miguel — B&W",
-    category: "Portraits",
-    alt: "Black and white portrait from the Miguel series",
-  },
-  99042317: {
-    title: "Marta",
-    category: "Portraits",
-    alt: "Portrait from the Marta photography series",
-  },
-  92371285: {
-    title: "Neon Halos",
-    category: "Experiments",
-    alt: "Nighttime portrait framed by a bright cyan neon triangle",
-  },
-  92371029: {
-    title: "Moody Winter",
-    category: "Experiments",
-    alt: "Atmospheric photograph from the Moody Winter series",
-  },
-  92342225: {
-    title: "Winter Lights",
-    category: "Experiments",
-    alt: "Low light photograph from the Winter Lights series",
-  },
-  211075901: {
-    title: "Myface",
-    category: "Design & film",
-    alt: "Selected creative work from the Myface project",
-  },
-  147865647: {
-    title: "Showreel",
-    category: "Design & film",
-    alt: "Cover frame from Henrique Coutinho’s showreel",
-  },
-};
-export const gallery = photographs.map(({ id, url }) => ({
-  id,
-  src: galleryImages[id],
-  url,
-  ...photoDetails[id],
-}));
+export const galleryCategories = [
+  "All",
+  "Photography",
+  "Design",
+  "Film & sound",
+] as const;
+export type GalleryCategory = (typeof galleryCategories)[number];
+
+export interface GalleryPhoto {
+  id: number;
+  projectId: number;
+  title: string;
+  src: string;
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+  number: number;
+}
+
+export interface GalleryVideo {
+  id: number;
+  title: string;
+  label: string;
+  provider: "Adobe" | "YouTube";
+  embedUrl: string;
+  width: number;
+  height: number;
+}
+
+export interface GalleryProject {
+  id: number;
+  title: string;
+  src: string;
+  url: string;
+  alt: string;
+  category: Exclude<GalleryCategory, "All">;
+  description: string[];
+  photos: GalleryPhoto[];
+  videos: GalleryVideo[];
+}
+
+export const gallery: GalleryProject[] = behanceProjects.map(
+  ({ id, title, url, file, alt, category, description, photos, videos }) => ({
+    id,
+    title,
+    src: galleryImages[file],
+    url,
+    alt,
+    category: category as GalleryProject["category"],
+    description,
+    photos: photos.map(({ id: photoId, file, alt, width, height }, index) => ({
+      id: photoId,
+      projectId: id,
+      title,
+      src: galleryPhotoImages[file],
+      url,
+      alt,
+      width,
+      height,
+      number: index + 1,
+    })),
+    videos: videos.map((video) => ({
+      ...video,
+      provider: video.provider as GalleryVideo["provider"],
+    })),
+  }),
+);
 
 export interface Project {
   title: string;
+  logo?: string;
   theme: string;
   discipline: string;
   summary: string;
@@ -67,10 +84,12 @@ export interface Project {
   features: string[];
   stack: string[];
   url: string;
+  privateRepository?: boolean;
 }
 export const projects: Project[] = [
   {
     title: "savingsOS",
+    logo: savingsOSLogo,
     theme: "savings",
     discipline: "PERSONAL FINANCE",
     summary: "Making everyday finances a little easier to understand.",
@@ -98,6 +117,22 @@ export const projects: Project[] = [
     ],
     stack: ["React", "TypeScript", "Vite"],
     url: "https://github.com/Quiique13/PetStay",
+  },
+  {
+    title: "BattleCraft",
+    theme: "battlecraft",
+    discipline: "ESPORTS PLATFORM",
+    summary: "Bringing esports communities into the game.",
+    description:
+      "An esports platform built around digital card collections, team building, and league engagement, with live broadcast tools and Twitch integrations.",
+    features: [
+      "Collect player cards, build teams, and compete in rankings.",
+      "Explore match statistics, collection boosts, rewards, and battle passes.",
+      "Connect Twitch integrations with live broadcast overlays and donation updates.",
+    ],
+    stack: ["Ruby on Rails", "Hotwire", "PostgreSQL", "Redis", "Tailwind CSS"],
+    url: "https://github.com/wlfz/BattleCraft",
+    privateRepository: true,
   },
 ];
 
@@ -160,8 +195,8 @@ export const timeline = [
   },
 ];
 
-export type GalleryPhoto = (typeof gallery)[number];
 export const contactEmail = "henrique.costa.coutinho@gmail.com";
+
 export const heroCaptions = [
   "A little curious. A lot of ideas.",
   "Good work. Occasionally bad jokes.",

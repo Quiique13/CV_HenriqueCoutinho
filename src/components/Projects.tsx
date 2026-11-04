@@ -1,6 +1,14 @@
 import { usePortfolio } from "../hooks/usePortfolio";
-import { ArrowUpRight, Code2, PawPrint } from "lucide-react";
+import {
+  ArrowUpRight,
+  Code2,
+  PawPrint,
+  Shield,
+  Swords,
+  Trophy,
+} from "lucide-react";
 import { projects } from "../data/portfolio";
+import { formatCount } from "../utils/format";
 
 export default function Projects() {
   const { openProject } = usePortfolio();
@@ -21,7 +29,7 @@ export default function Projects() {
           <span className="serif">More making.</span>
         </h2>
         <p>
-          A selection of personal coding projects.
+          A selection of coding projects.
           <br />
           Real problems, thoughtful interfaces.
         </p>
@@ -35,16 +43,21 @@ export default function Projects() {
               aria-label={`Explore ${item.title}`}
             >
               <div className="project-visual-top">
-                <span>PERSONAL PROJECT / 0{index + 1}</span>
+                <span>CODING PROJECT / {formatCount(index + 1)}</span>
                 <span className="round-arrow">
                   <ArrowUpRight size={20} />
                 </span>
               </div>
               {item.theme === "savings" ? (
                 <div className="savings-art" aria-hidden="true">
-                  <span className="savings-symbol">
-                    s<span>↗</span>
-                  </span>
+                  <img
+                    className="savings-logo"
+                    src={item.logo}
+                    alt=""
+                    width={2560}
+                    height={2560}
+                    loading="lazy"
+                  />
                   <strong>
                     savings<span>OS</span>
                   </strong>
@@ -59,6 +72,24 @@ export default function Projects() {
                     )}
                   </div>
                 </div>
+              ) : item.theme === "battlecraft" ? (
+                <div className="battlecraft-art" aria-hidden="true">
+                  <div className="battlecraft-deck">
+                    <span className="battlecraft-trading-card">
+                      <Shield strokeWidth={1.3} />
+                    </span>
+                    <span className="battlecraft-trading-card">
+                      <Swords strokeWidth={1.3} />
+                    </span>
+                    <span className="battlecraft-trading-card">
+                      <Trophy strokeWidth={1.3} />
+                    </span>
+                  </div>
+                  <strong>BattleCraft</strong>
+                  <span className="project-art-caption">
+                    Collect. Compete. Connect.
+                  </span>
+                </div>
               ) : (
                 <div className="petstay-art" aria-hidden="true">
                   <div className="pet-orbit orbit-one" />
@@ -72,7 +103,7 @@ export default function Projects() {
               )}
               <div className="project-visual-bottom">
                 <span>{item.discipline}</span>
-                <span>REACT + TYPESCRIPT</span>
+                <span>{item.stack.slice(0, 2).join(" + ").toUpperCase()}</span>
               </div>
             </button>
             <div className="project-info">
@@ -87,7 +118,7 @@ export default function Projects() {
                 </h3>
                 <p>{item.summary}</p>
               </div>
-              <span className="project-index">0{index + 1}</span>
+              <span className="project-index">{formatCount(index + 1)}</span>
             </div>
           </article>
         ))}
