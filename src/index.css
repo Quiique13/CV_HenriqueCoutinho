@@ -1,13 +1,171 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("/fonts/dm-sans-latin.woff2") format("woff2");
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/space-mono-latin.woff2") format("woff2");
+}
+
+:root {
+  font-family: "DM Sans", Arial, sans-serif;
+  color: #25251f;
+  background: #f7f6f0;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  --paper: #f7f6f0;
+  --ink: #25251f;
+  --muted: #6b6b60;
+  --orange: #e64c26;
+  --line: #d9d9cf;
+  --mono: "Space Mono", Consolas, monospace;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 30px;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+body:has(dialog[open]) {
+  overscroll-behavior: contain;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+}
+button:disabled {
+  cursor: default;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  border: 0;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+svg {
+  flex-shrink: 0;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #b63b1d;
+  outline-offset: 5px;
+}
+::selection {
+  background: #ed532d;
+  color: #fff;
+}
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-weight: 550;
+}
+p {
+  line-height: 1.7;
+}
+section[id] {
+  scroll-margin-top: 24px;
+}
+.skip-link {
+  position: fixed;
+  left: 20px;
+  top: -80px;
+  background: var(--ink);
+  color: white;
+  padding: 12px 18px;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 15px;
+}
+.page-width {
+  width: min(1320px, calc(100% - 100px));
+  margin-inline: auto;
+}
+.section-space {
+  padding-block: 100px;
+}
+.serif {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+button {
+  background: none;
+}
+a:focus-visible {
+  border-radius: 2px;
+}
+dialog {
+  color: var(--ink);
+}
+@media (min-width: 1600px) {
+  .page-width {
+    width: min(1440px, calc(100% - 140px));
+  }
+}
+@media (max-width: 900px) {
+  .page-width {
+    width: calc(100% - 56px);
+  }
+  .section-space {
+    padding-block: 75px;
+  }
+}
+@media (max-width: 600px) {
+  .page-width {
+    width: calc(100% - 36px);
+  }
+  .section-space {
+    padding-block: 60px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

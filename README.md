@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# Quiique — Henrique Coutinho
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A personal portfolio built with React, TypeScript, and Vite. The visual direction combines warm paper, ink, orange, editorial typography, and an abstract photography collage.
 
-## Available Scripts
+## Run locally
 
-In the project directory, you can run:
+```sh
+npm install
+npm run dev
+```
 
-### `npm start`
+Open the local address printed by Vite. On Windows PowerShell, use `npm.cmd` if execution policy blocks `npm.ps1`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```sh
+npm run build
+npm run preview
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The build checks TypeScript and generates `dist/`. Preview serves that production build locally. This is a static portfolio: it needs no database, account system, or API credentials. Configure a host to serve `dist/` at its domain root. Photos are imported from src/assets and processed by Vite. Fonts and the favicon currently use root-relative public URLs; hosting under a subdirectory needs corresponding base/URL changes.
 
-### `npm test`
+## What is included
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Responsive navigation, a photography collage, and a small interactive smile sticker.
+- An introduction and seven education/career milestones.
+- savingsOS and PetStay project details, with links to their repositories.
+- Eight locally stored collection covers from Henrique's Behance portfolio.
+- Gallery filters and a modal image viewer with previous/next buttons, arrow-key navigation, Escape dismissal, and native dialog focus management.
+- Email contact and copy-to-clipboard, with a fallback message if clipboard permission is unavailable.
+- Locally bundled fonts, reduced-motion support, skip navigation, and page metadata.
 
-### `npm run build`
+## Project structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The app follows the supplied Vite + React structure, using TypeScript's `.tsx` and `.ts` extensions.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```text
+quique.v1/
+|-- index.html
+|-- public/
+|   |-- favicon.svg
+|   `-- fonts/                  # Directly served fonts and licenses
+|-- src/
+|   |-- assets/
+|   |   |-- images/             # Profile portrait and gallery photos
+|   |   `-- images.ts           # Vite-managed image imports
+|   |-- components/             # Header, Footer, Hero, page sections, Dialog
+|   |-- hooks/                  # Clipboard, dialog, scroll lock, context access
+|   |-- context/                # Shared photo/project overlay state
+|   |-- services/               # Browser clipboard integration
+|   |-- utils/                  # Count formatting and index wrapping
+|   |-- data/                   # Portfolio content and photo source metadata
+|   |-- App.tsx                 # Provider and page composition
+|   |-- main.tsx                # React entry point
+|   |-- index.css               # Fonts, palette, and global styles
+|   `-- App.css                 # Component styles and responsive layouts
+|-- package.json
+|-- vite.config.ts
+`-- README.md
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Local state stays with its section: navigation in Header, the playful caption in Hero, gallery filters in Gallery, and copy feedback in Contact. PortfolioProvider shares only the active photo/project overlay with the sections and PortfolioDialogs. The services folder currently wraps the browser clipboard; the portfolio has no backend API.
 
-### `npm run eject`
+## Edit the content
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| File                        | Purpose                                                      |
+| --------------------------- | ------------------------------------------------------------ |
+| `src/data/portfolio.ts`     | Projects, timeline, email, captions, and photo descriptions. |
+| `src/data/photography.json` | Behance source URLs and image filenames.                     |
+| `src/assets/images/`        | Profile portrait and gallery images.                         |
+| `src/assets/images.ts`      | Image imports processed by Vite.                             |
+| `src/components/`           | Individual page sections and reusable UI.                    |
+| `src/hooks/`                | Reusable state and browser lifecycle logic.                  |
+| `src/context/`              | Shared photo/project overlay state and provider.             |
+| `src/services/`             | Browser integration calls.                                   |
+| `src/utils/`                | Pure formatting and collection helpers.                      |
+| `src/App.tsx`               | Top-level provider and section ordering.                     |
+| `src/App.css`               | Component appearance and responsive layouts.                 |
+| `src/index.css`             | Fonts, palette, and base styles.                             |
+| `index.html`                | Browser title, description, and social metadata.             |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The timeline contains sourced education and work milestones. Add personal life events to `timeline` when you decide which ones belong on the public website. Update the current role when it changes.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The gallery uses downloaded Behance collection-cover images; each viewer links to the full original collection. The showreel opens its project on Behance, where the video can be watched. Project covers are original decorative illustrations for this portfolio, rather than application screenshots or original project logos. The contact link opens the visitor's email client.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Content sources
 
-## Learn More
+- Career and education: privately supplied CV, updated 9 October 2026. Personal phone numbers, third-party references, and the original document link are omitted from the public repository.
+- Photography and creative collections: [Henrique Costa on Behance](https://www.behance.net/henriqueCosta). Exact collection and image source URLs are retained in `src/data/photography.json`.
+- Profile portrait: the original image supplied by Henrique, stored at `src/assets/images/henrique-profile.png` and featured in the hero collage.
+- Project descriptions: [savingsOS README](https://github.com/Quiique13/SavingsOS#readme) and [PetStay README](https://github.com/Quiique13/PetStay#readme).
+- DM Sans and Space Mono are bundled under the SIL Open Font License; license files are in `public/fonts/`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technology options considered
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+These options can all present a timeline and photo gallery. The choice changes the development and editing workflow, rather than the visual possibilities.
 
-### Code Splitting
+| Option                                   | Good fit                                                                                           | Tradeoff for this portfolio                                                                               |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **React + TypeScript + Vite — selected** | Interactive galleries, reusable project details, and growing a frontend portfolio.                 | A build step and JavaScript dependencies. Already matches this project and both featured coding projects. |
+| Jekyll                                   | A content-led portfolio with Markdown posts and collections.                                       | Ruby-based build tooling; sophisticated interactions still need JavaScript.                               |
+| Plain HTML + CSS + JavaScript            | A small portfolio with minimal tooling.                                                            | Repeated layouts and filtering/modal behavior need manual organisation as it grows.                       |
+| Ruby on Rails                            | A portfolio that also needs a server application, database, accounts, or a custom content manager. | More hosting and maintenance than the current presentation-focused site needs.                            |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+TypeScript is the application language, React is the UI library, and Vite is the development/build tool. HTML supplies structure and CSS supplies appearance in every browser-based option.
 
-### Analyzing the Bundle Size
+Official references: [React](https://react.dev/learn), [Jekyll](https://jekyllrb.com/docs/), [Rails](https://guides.rubyonrails.org/getting_started.html), and [MDN web foundations](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Your_first_website).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Verification
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The production build includes TypeScript checking. A before/after server-render comparison verified identical page markup apart from image asset locations. Server-rendered checks also verified both project dialogs, filtered gallery details, image availability, and wraparound navigation. Browser automation was unavailable during this session, so visual layout and interactive behavior still need manual browser verification. This local project has not been deployed.
