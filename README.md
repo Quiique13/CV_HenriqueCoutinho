@@ -2,6 +2,27 @@
 
 A personal portfolio built with React, TypeScript, and Vite. The visual direction combines warm paper, ink, orange, editorial typography, and a framed profile portrait.
 
+## Open the web app
+
+The deployment address is [Quiique](https://quiique13.github.io/CV_HenriqueCoutinho/). It becomes available after GitHub Pages is enabled and the [Quiique web app workflow](https://github.com/Quiique13/CV_HenriqueCoutinho/actions/workflows/webapp-pages.yml) completes successfully.
+
+Use **Install app** in Chrome or Edge, or **Share → Add to Home Screen** in Safari on iPhone, to open the portfolio in its own window. Internet is required to load the portfolio and its embedded videos.
+
+## GitHub Pages deployment
+
+The workflow builds changes to `main` and publishes only `dist/`. Pull requests build for verification without deploying. In the repository's **Settings → Pages**, select **GitHub Actions** as the source. GitHub Pages requires a public repository on the free plan, or a plan that supports Pages for private repositories. Changing a repository to public exposes its source and commit history.
+
+The GitHub build uses the Pages base path for scripts, styles, images, fonts, icons, and the web app manifest. The manifest uses relative URLs so installation stays inside this portfolio, alongside SavingsOS and PetStay. There is no service worker or offline cache.
+
+To check the hosted edition locally:
+
+```sh
+npm run build:web
+npm run preview:web
+```
+
+Open `/CV_HenriqueCoutinho/` at the preview server's address. `npm run build` still produces the edition for a domain root. If the repository is renamed or moved to another host, set `VITE_BASE_PATH` when running `build:web`; the workflow derives it from GitHub Pages settings automatically.
+
 ## Run locally
 
 ```sh
@@ -16,7 +37,7 @@ npm run build
 npm run preview
 ```
 
-The build checks TypeScript and generates `dist/`. Preview serves that production build locally. This is a static portfolio: it needs no database, account system, or API credentials. Configure a host to serve `dist/` at its domain root. Photos are imported from src/assets and processed by Vite. Fonts and the favicon currently use root-relative public URLs; hosting under a subdirectory needs corresponding base/URL changes.
+The build checks TypeScript and generates `dist/`. Preview serves that production build locally. This is a static portfolio: it needs no database, account system, or API credentials. Configure a host to serve `dist/` at its domain root, or use the GitHub Pages build above for the repository subdirectory. Photos are imported from src/assets and processed by Vite; public fonts, icons, and the manifest follow the configured base path.
 
 ## What is included
 
@@ -58,7 +79,7 @@ quique.v1/
 `-- README.md
 ```
 
-Local state stays with its section: navigation in Header, the playful caption in Hero, gallery filters in Gallery, and copy feedback in Contact. PortfolioProvider shares only the active photo/project overlay with the sections and PortfolioDialogs. The services folder currently wraps the browser clipboard; the portfolio has no backend API.
+Local state stays with its section: navigation in Header, the playful caption in Hero, gallery filters in Gallery, and copy feedback in Contact. PortfolioProvider shares only the active photo/project overlay with the sections and PortfolioDialogs. The services folder currently wraps the browser clipboard; the portfolio has no backend API. `.github/workflows/webapp-pages.yml` builds and publishes the web app. `public/manifest.webmanifest` and `public/icons/` provide its installation metadata and home-screen icons.
 
 ## Edit the content
 
