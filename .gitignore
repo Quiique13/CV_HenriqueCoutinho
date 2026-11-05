@@ -13,6 +13,21 @@ dist-ssr
 /release/
 *.local
 
+# Local secrets and private documents
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.sqlite
+*.sqlite3
+.aws/
+.ssh/
+/private/
+/backups/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

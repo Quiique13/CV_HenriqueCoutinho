@@ -8,7 +8,7 @@ Download the production web app from [GitHub Releases](https://github.com/Quiiqu
 
 Extract the archive and serve its `dist/` folder with a static web server. For example, with Node.js installed, run `npx --yes serve dist` from the extracted folder and open the address it prints. The release uses relative asset URLs so it can also be uploaded to a static host at its root or a subdirectory. Opening `index.html` directly from the filesystem is not supported. Embedded videos need an internet connection.
 
-A release provides downloadable files; publishing a live website still requires hosting. Releases in this private repository are accessible to people with repository access.
+A release provides downloadable files. The live web app is published separately through GitHub Pages.
 
 ## Open the web app
 
