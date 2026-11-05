@@ -2,6 +2,14 @@
 
 A personal portfolio built with React, TypeScript, and Vite. The visual direction combines warm paper, ink, orange, editorial typography, and a framed profile portrait.
 
+## Download a release
+
+Download the production web app from [GitHub Releases](https://github.com/Quiique13/CV_HenriqueCoutinho/releases/latest). The `Quiique-1.0.0-web.zip` archive contains the compiled portfolio, bundled images and fonts, app installation icons, and instructions. `SHA256SUMS.txt` lets you verify the download.
+
+Extract the archive and serve its `dist/` folder with a static web server. For example, with Node.js installed, run `npx --yes serve dist` from the extracted folder and open the address it prints. The release uses relative asset URLs so it can also be uploaded to a static host at its root or a subdirectory. Opening `index.html` directly from the filesystem is not supported. Embedded videos need an internet connection.
+
+A release provides downloadable files; publishing a live website still requires hosting. Releases in this private repository are accessible to people with repository access.
+
 ## Open the web app
 
 The deployment address is [Quiique](https://quiique13.github.io/CV_HenriqueCoutinho/). It becomes available after GitHub Pages is enabled and the [Quiique web app workflow](https://github.com/Quiique13/CV_HenriqueCoutinho/actions/workflows/webapp-pages.yml) completes successfully.
