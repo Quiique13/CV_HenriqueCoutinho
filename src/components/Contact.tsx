@@ -1,8 +1,12 @@
 import { ArrowUpRight, Check, Plus, Smile } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 import { contactEmail as email } from "../data/portfolio";
 import { useClipboard } from "../hooks/useClipboard";
+import ScrollRevealHeading from "./ScrollRevealHeading";
+import StarBorderLink from "./StarBorderLink";
 
 export default function Contact() {
+  const { t } = useLanguage();
   const { copied, copyError, copy } = useClipboard();
   const copyEmail = () => copy(email);
   return (
@@ -13,44 +17,44 @@ export default function Contact() {
     >
       <div className="page-width">
         <div className="section-eyebrow">
-          <span>05 / GOOD THINGS START WITH A HELLO</span>
+          <span>{t("contactEyebrow")}</span>
           <Smile size={22} />
         </div>
         <div className="contact-heading">
-          <h2 id="contact-title">
-            Have a good idea?
-            <br />
-            <span className="serif">Let’s make it real.</span>
-          </h2>
-          <a
+          <ScrollRevealHeading
+            id="contact-title"
+            lines={[t("contactLine")]}
+            accent={t("contactAccent")}
+          />
+          <StarBorderLink
             className="contact-arrow"
+            data-animated-content
             href={`mailto:${email}`}
-            aria-label="Email Henrique"
+            aria-label={t("emailHenrique")}
           >
             <ArrowUpRight strokeWidth={1} />
-          </a>
+          </StarBorderLink>
         </div>
-        <div className="contact-bottom">
+        <div className="contact-bottom" data-animated-content>
           <div>
-            <span className="small-label">
-              PROJECTS, COLLABORATIONS, OR A REALLY GOOD JOKE.
-            </span>
+            <span className="small-label">{t("contactCopy")}</span>
             <div className="email-row">
-              <a href={`mailto:${email}`}>{email}</a>
+              <StarBorderLink
+                className="contact-email"
+                href={`mailto:${email}`}
+              >
+                {email}
+              </StarBorderLink>
               <button
                 className="icon-button"
                 onClick={copyEmail}
-                aria-label={copied ? "Email copied" : "Copy email address"}
+                aria-label={t(copied ? "emailCopied" : "copyEmail")}
               >
                 {copied ? <Check size={17} /> : <Plus size={17} />}
               </button>
             </div>
             <span className="copy-status" role="status">
-              {copied
-                ? "Copied. Now say something nice."
-                : copyError
-                  ? "Please select the email above to copy it."
-                  : ""}
+              {copied ? t("copySuccess") : copyError ? t("copyError") : ""}
             </span>
           </div>
           <div className="contact-socials">

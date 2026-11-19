@@ -1,4 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
+import { galleryVideoLabel } from "../data/localizedPortfolio";
 import type { GalleryVideo } from "../data/portfolio";
 
 interface ProjectVideoProps {
@@ -7,6 +9,8 @@ interface ProjectVideoProps {
 }
 
 export default function ProjectVideo({ video, projectUrl }: ProjectVideoProps) {
+  const { t } = useLanguage();
+  const label = galleryVideoLabel(video, t);
   return (
     <figure className="gallery-video">
       <div
@@ -15,7 +19,7 @@ export default function ProjectVideo({ video, projectUrl }: ProjectVideoProps) {
       >
         <iframe
           src={video.embedUrl}
-          title={video.title}
+          title={video.title.replace(/ — .*$/, ` — ${label}`)}
           loading="lazy"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
           allowFullScreen
@@ -24,10 +28,10 @@ export default function ProjectVideo({ video, projectUrl }: ProjectVideoProps) {
       </div>
       <figcaption>
         <span>
-          {video.label} / {video.provider}
+          {label} / {video.provider}
         </span>
         <a href={projectUrl} target="_blank" rel="noreferrer">
-          Watch on Behance <ArrowUpRight size={14} />
+          {t("watchBehance")} <ArrowUpRight size={14} />
         </a>
       </figcaption>
     </figure>

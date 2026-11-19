@@ -1,14 +1,20 @@
+import type { Translate } from "../data/messages";
+
 export function formatCount(value: number): string {
   return String(value).padStart(2, "0");
 }
 
-export function formatMediaCount(images: number, videos: number): string {
+export function formatMediaCount(
+  t: Translate,
+  images: number,
+  videos: number,
+): string {
   return [
     images > 0
-      ? `${formatCount(images)} ${images === 1 ? "IMAGE" : "IMAGES"}`
+      ? `${formatCount(images)} ${t(images === 1 ? "image" : "images")}`
       : "",
     videos > 0
-      ? `${formatCount(videos)} ${videos === 1 ? "VIDEO" : "VIDEOS"}`
+      ? `${formatCount(videos)} ${t(videos === 1 ? "video" : "videos")}`
       : "",
   ]
     .filter(Boolean)

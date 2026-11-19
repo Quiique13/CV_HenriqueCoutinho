@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
+import {
+  galleryCategoryMessage,
+  galleryDescription,
+  galleryPhotoAlt,
+} from "../data/localizedPortfolio";
 import { ArrowLeft, ArrowUpRight, Camera, Play, Plus } from "lucide-react";
 import {
   gallery,
@@ -8,9 +14,12 @@ import {
 } from "../data/portfolio";
 import { usePortfolio } from "../hooks/usePortfolio";
 import { formatCount, formatMediaCount } from "../utils/format";
+import GalleryCarousel from "./GalleryCarousel";
 import ProjectVideo from "./ProjectVideo";
+import ScrollRevealHeading from "./ScrollRevealHeading";
 
 export default function Gallery() {
+  const { language, t } = useLanguage();
   const { openPhoto } = usePortfolio();
   const [category, setCategory] = useState<GalleryCategory>("All");
   const [selectedProject, setSelectedProject] = useState<GalleryProject | null>(
@@ -18,20 +27,51 @@ export default function Gallery() {
   );
   const projectHeading = useRef<HTMLHeadingElement>(null);
   const projectView = useRef<HTMLDivElement>(null);
+  const carouselOpenButton = useRef<HTMLButtonElement>(null);
   const projectButtons = useRef(new Map<number, HTMLButtonElement>());
-  const lastProjectId = useRef<number | null>(null);
-  const visibleProjects = gallery.filter(
-    (project) => category === "All" || project.category === category,
+  const [lastProjectId, setLastProjectId] = useState<number | null>(null);
+  const [paused, setPaused] = useState(false);
+  const [carouselUnavailable, setCarouselUnavailable] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
+  const visibleProjects = useMemo(
+    () =>
+      gallery.filter(
+        (project) => category === "All" || project.category === category,
+      ),
+    [category],
+  );
+  const showCarousel =
+    !reducedMotion && !carouselUnavailable && visibleProjects.length > 1;
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (event: MediaQueryListEvent) =>
+      setReducedMotion(event.matches);
+    preference.addEventListener("change", onChange);
+    return () => preference.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     if (selectedProject) {
       projectHeading.current?.focus({ preventScroll: true });
       projectView.current?.scrollIntoView({ block: "start" });
-    } else if (lastProjectId.current !== null) {
-      projectButtons.current.get(lastProjectId.current)?.focus();
+    } else if (lastProjectId !== null) {
+      const button =
+        carouselOpenButton.current ?? projectButtons.current.get(lastProjectId);
+      button?.focus();
     }
-  }, [selectedProject]);
+  }, [lastProjectId, selectedProject]);
+
+  const description = selectedProject
+    ? galleryDescription(selectedProject, language)
+    : [];
+  const openProject = (project: GalleryProject) => {
+    setLastProjectId(project.id);
+    setSelectedProject(project);
+  };
+
   return (
     <section
       className="photo-section section-space"
@@ -40,20 +80,20 @@ export default function Gallery() {
     >
       <div className="page-width">
         <div className="section-eyebrow">
-          <span>03 / A DIFFERENT KIND OF CAPTURE</span>
+          <span>{t("galleryEyebrow")}</span>
           <Camera size={18} />
         </div>
         <div className="section-heading">
-          <h2 id="photography-title">
-            Sometimes, I let
-            <br />
-            <span className="serif">the light talk.</span>
-          </h2>
-          <div>
+          <ScrollRevealHeading
+            id="photography-title"
+            lines={[t("galleryLine")]}
+            accent={t("galleryAccent")}
+          />
+          <div data-animated-content>
             <p>
-              Photography, design, film, and sound.
+              {t("galleryCopy")}
               <br />
-              {gallery.length} projects, each with a story of its own.
+              {t("galleryCount", { count: gallery.length })}
             </p>
             <a
               className="text-link"
@@ -61,7 +101,7 @@ export default function Gallery() {
               target="_blank"
               rel="noreferrer"
             >
-              The full picture on Behance <ArrowUpRight size={16} />
+              {t("allBehance")} <ArrowUpRight size={16} />
             </a>
           </div>
         </div>
@@ -76,10 +116,11 @@ export default function Gallery() {
                 className="gallery-back text-link"
                 onClick={() => setSelectedProject(null)}
               >
-                <ArrowLeft size={16} /> All projects
+                <ArrowLeft size={16} /> {t("allProjects")}
               </button>
               <span className="gallery-count">
                 {formatMediaCount(
+                  t,
                   selectedProject.photos.length,
                   selectedProject.videos.length,
                 )}
@@ -88,7 +129,7 @@ export default function Gallery() {
             <div className="gallery-project-heading">
               <div>
                 <span className="gallery-project-category">
-                  {selectedProject.category}
+                  {t(galleryCategoryMessage[selectedProject.category])}
                 </span>
                 <h3
                   id="gallery-project-title"
@@ -104,12 +145,15 @@ export default function Gallery() {
                 target="_blank"
                 rel="noreferrer"
               >
-                View project on Behance <ArrowUpRight size={16} />
+                {t("viewBehance")} <ArrowUpRight size={16} />
               </a>
             </div>
-            {selectedProject.description.length > 0 && (
-              <div className="gallery-project-description">
-                {selectedProject.description.map((paragraph, index) => (
+            {description.length > 0 && (
+              <div
+                className="gallery-project-description"
+                data-animated-content
+              >
+                {description.map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
               </div>
@@ -117,7 +161,10 @@ export default function Gallery() {
             {selectedProject.videos.length > 0 && (
               <div
                 className="gallery-videos"
-                aria-label={`${selectedProject.title} videos`}
+                data-animated-content
+                aria-label={t("projectVideos", {
+                  title: selectedProject.title,
+                })}
               >
                 {selectedProject.videos.map((video) => (
                   <ProjectVideo
@@ -131,15 +178,23 @@ export default function Gallery() {
             {selectedProject.photos.length > 0 && (
               <div className="gallery-photo-grid">
                 {selectedProject.photos.map((photo, index) => (
-                  <figure className="gallery-project-photo" key={photo.id}>
+                  <figure
+                    className="gallery-project-photo"
+                    key={photo.id}
+                    data-animated-content
+                  >
                     <button
                       className="gallery-photo-button"
                       onClick={() => openPhoto(selectedProject.photos, index)}
-                      aria-label={`View ${photo.title}, image ${photo.number} of ${selectedProject.photos.length}`}
+                      aria-label={t("viewImage", {
+                        title: photo.title,
+                        number: photo.number,
+                        total: selectedProject.photos.length,
+                      })}
                     >
                       <img
                         src={photo.src}
-                        alt={photo.alt}
+                        alt={galleryPhotoAlt(photo, language, t)}
                         loading="lazy"
                         width={photo.width}
                         height={photo.height}
@@ -159,77 +214,101 @@ export default function Gallery() {
           </div>
         ) : (
           <>
-            <div className="gallery-toolbar">
+            <div className="gallery-toolbar" data-animated-content>
               <div
                 className="gallery-filters"
                 role="group"
-                aria-label="Filter creative projects"
+                aria-label={t("filterProjects")}
               >
                 {galleryCategories.map((filter) => (
                   <button
-                    key={filter}
+                    key={t(galleryCategoryMessage[filter])}
                     aria-pressed={category === filter}
-                    onClick={() => setCategory(filter)}
+                    onClick={() => {
+                      if (filter === category) return;
+                      setLastProjectId(null);
+                      setCategory(filter);
+                    }}
                   >
-                    {filter}
+                    {t(galleryCategoryMessage[filter])}
                     {category === filter && <span className="filter-dot" />}
                   </button>
                 ))}
               </div>
               <span className="gallery-count" aria-live="polite">
-                {formatCount(visibleProjects.length)} PROJECTS
+                {t("projectCount", {
+                  count: formatCount(visibleProjects.length),
+                })}
               </span>
             </div>
-            <div className="gallery-grid">
-              {visibleProjects.map((project) => (
-                <figure className="gallery-item" key={project.id}>
-                  <button
-                    className="gallery-image"
-                    ref={(node) => {
-                      if (node) projectButtons.current.set(project.id, node);
-                      else projectButtons.current.delete(project.id);
-                    }}
-                    onClick={() => {
-                      lastProjectId.current = project.id;
-                      setSelectedProject(project);
-                    }}
-                    aria-label={`Explore ${project.title}, ${formatMediaCount(project.photos.length, project.videos.length).toLowerCase()}`}
+            {showCarousel ? (
+              <GalleryCarousel
+                key={category}
+                projects={visibleProjects}
+                returningProjectId={lastProjectId}
+                paused={paused}
+                onTogglePlayback={() => setPaused((current) => !current)}
+                onOpen={openProject}
+                onUnavailable={() => setCarouselUnavailable(true)}
+                openButtonRef={carouselOpenButton}
+              />
+            ) : (
+              <div className="gallery-grid">
+                {visibleProjects.map((project) => (
+                  <figure
+                    className="gallery-item"
+                    key={project.id}
+                    data-animated-content
                   >
-                    <img
-                      src={project.src}
-                      alt={project.alt}
-                      loading="lazy"
-                      width={808}
-                      height={632}
-                    />
-                    <span className="gallery-image-overlay" aria-hidden="true">
+                    <button
+                      className="gallery-image"
+                      ref={(node) => {
+                        if (node) projectButtons.current.set(project.id, node);
+                        else projectButtons.current.delete(project.id);
+                      }}
+                      onClick={() => openProject(project)}
+                      aria-label={`${t("explore", { title: project.title })}, ${formatMediaCount(t, project.photos.length, project.videos.length).toLocaleLowerCase(language)}`}
+                    >
+                      <img
+                        src={project.src}
+                        alt={t("galleryCover", { title: project.title })}
+                        loading="lazy"
+                        width={808}
+                        height={632}
+                      />
+                      <span
+                        className="gallery-image-overlay"
+                        aria-hidden="true"
+                      >
+                        <span>
+                          {project.videos.length > 0 ? (
+                            <Play size={22} />
+                          ) : (
+                            <ArrowUpRight size={22} />
+                          )}
+                        </span>
+                        <span>{t("exploreProject")}</span>
+                      </span>
+                    </button>
+                    <figcaption>
+                      <h3>{project.title}</h3>
                       <span>
-                        {project.videos.length > 0 ? (
-                          <Play size={22} />
-                        ) : (
-                          <ArrowUpRight size={22} />
+                        {formatMediaCount(
+                          t,
+                          project.photos.length,
+                          project.videos.length,
                         )}
                       </span>
-                      <span>EXPLORE PROJECT</span>
-                    </span>
-                  </button>
-                  <figcaption>
-                    <h3>{project.title}</h3>
-                    <span>
-                      {formatMediaCount(
-                        project.photos.length,
-                        project.videos.length,
-                      )}
-                    </span>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            )}
           </>
         )}
-        <div className="photo-footer">
-          <span>ALL PHOTOGRAPHY & CREATIVE WORK BY HENRIQUE COUTINHO.</span>
-          <span>A DIFFERENT LENS. THE SAME CURIOSITY.</span>
+        <div className="photo-footer" data-animated-content>
+          <span>{t("galleryCredit")}</span>
+          <span>{t("gallerySlogan")}</span>
         </div>
       </div>
     </section>

@@ -196,9 +196,3 @@ export const timeline = [
 ];
 
 export const contactEmail = "henrique.costa.coutinho@gmail.com";
-
-export const heroCaptions = [
-  "A little curious. A lot of ideas.",
-  "Good work. Occasionally bad jokes.",
-  "Pixel perfection. Human imperfection.",
-];

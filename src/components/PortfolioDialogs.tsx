@@ -6,18 +6,24 @@ import {
   LockKeyhole,
   X,
 } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
+import { galleryPhotoAlt, localizeProject } from "../data/localizedPortfolio";
 import { usePortfolio } from "../hooks/usePortfolio";
 import { useScrollLock } from "../hooks/useScrollLock";
 import { formatCount } from "../utils/format";
 import Dialog from "./Dialog";
 
 export default function PortfolioDialogs() {
+  const { language, t } = useLanguage();
   const { overlay, closeOverlay, movePhoto } = usePortfolio();
   useScrollLock(overlay !== null);
   const photos = overlay?.type === "photo" ? overlay.photos : [];
   const photoIndex = overlay?.type === "photo" ? overlay.index : null;
   const selectedPhoto = photoIndex === null ? null : photos[photoIndex];
-  const project = overlay?.type === "project" ? overlay.project : null;
+  const project =
+    overlay?.type === "project"
+      ? localizeProject(overlay.project, language)
+      : null;
   return (
     <>
       <Dialog
@@ -40,13 +46,16 @@ export default function PortfolioDialogs() {
           <div className="lightbox-content">
             <div className="modal-top">
               <span>
-                {selectedPhoto.title} / {formatCount((photoIndex ?? 0) + 1)} OF{" "}
-                {formatCount(photos.length)}
+                {selectedPhoto.title} /{" "}
+                {t("countOf", {
+                  number: formatCount((photoIndex ?? 0) + 1),
+                  total: formatCount(photos.length),
+                })}
               </span>
               <button
                 className="icon-button"
                 onClick={() => closeOverlay()}
-                aria-label="Close image viewer"
+                aria-label={t("closeImage")}
                 autoFocus
               >
                 <X />
@@ -55,7 +64,7 @@ export default function PortfolioDialogs() {
             <img
               className="lightbox-photo"
               src={selectedPhoto.src}
-              alt={selectedPhoto.alt}
+              alt={galleryPhotoAlt(selectedPhoto, language, t)}
               width={selectedPhoto.width}
               height={selectedPhoto.height}
             />
@@ -63,21 +72,21 @@ export default function PortfolioDialogs() {
               <div>
                 <h2 id="lightbox-title">{selectedPhoto.title}</h2>
                 <a href={selectedPhoto.url} target="_blank" rel="noreferrer">
-                  View project on Behance <ArrowUpRight size={16} />
+                  {t("viewBehance")} <ArrowUpRight size={16} />
                 </a>
               </div>
               <div className="lightbox-arrows">
                 <button
                   className="icon-button"
                   onClick={() => movePhoto(-1)}
-                  aria-label="Previous image"
+                  aria-label={t("previousImage")}
                 >
                   <ArrowLeft />
                 </button>
                 <button
                   className="icon-button"
                   onClick={() => movePhoto(1)}
-                  aria-label="Next image"
+                  aria-label={t("nextImage")}
                 >
                   <ArrowRight />
                 </button>
@@ -95,11 +104,13 @@ export default function PortfolioDialogs() {
         {project && (
           <div className="project-dialog-content">
             <div className="modal-top">
-              <span>CODING PROJECT / {project.discipline}</span>
+              <span>
+                {t("codingProject")} / {project.discipline}
+              </span>
               <button
                 className="icon-button"
                 onClick={() => closeOverlay()}
-                aria-label="Close project"
+                aria-label={t("closeProject")}
                 autoFocus
               >
                 <X />
@@ -109,7 +120,7 @@ export default function PortfolioDialogs() {
               <img
                 className="project-dialog-logo"
                 src={project.logo}
-                alt={`${project.title} logo`}
+                alt={t("logo", { title: project.title })}
                 width={2560}
                 height={2560}
               />
@@ -119,7 +130,7 @@ export default function PortfolioDialogs() {
               <span className="orange-period">.</span>
             </h2>
             <p className="project-detail-intro">{project.description}</p>
-            <h3>The details</h3>
+            <h3>{t("details")}</h3>
             <ul>
               {project.features.map((feature) => (
                 <li key={feature}>
@@ -141,11 +152,11 @@ export default function PortfolioDialogs() {
             >
               {project.privateRepository ? (
                 <>
-                  Private repository <LockKeyhole size={18} />
+                  {t("privateRepo")} <LockKeyhole size={18} />
                 </>
               ) : (
                 <>
-                  Explore the code <Code2 size={18} />
+                  {t("exploreCode")} <Code2 size={18} />
                 </>
               )}
               <ArrowUpRight size={16} />

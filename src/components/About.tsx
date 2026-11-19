@@ -1,6 +1,9 @@
 import { Plus } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
+import ScrollRevealHeading from "./ScrollRevealHeading";
 
 export default function About() {
+  const { t } = useLanguage();
   return (
     <section
       className="about-section page-width section-space"
@@ -8,27 +11,18 @@ export default function About() {
       aria-labelledby="about-title"
     >
       <div className="section-eyebrow">
-        <span>01 / THE PERSON BEHIND THE PIXELS</span>
+        <span>{t("aboutEyebrow")}</span>
         <Plus size={18} />
       </div>
       <div className="about-layout">
-        <h2 id="about-title">
-          A creative brain.
-          <br />A technical side.
-          <br />
-          <span className="serif">Same person.</span>
-        </h2>
-        <div className="about-copy">
-          <p>
-            I’ve moved between design, photography, live broadcasts, and
-            frontend development. Different mediums. The same instinct to make
-            something worth paying attention to.
-          </p>
-          <p>
-            Today, I build responsive interfaces at Elisk, bringing a designer’s
-            eye to code. Away from the screen, I’m usually looking through a
-            viewfinder. The curiosity tends to come with me.
-          </p>
+        <ScrollRevealHeading
+          id="about-title"
+          lines={[t("aboutLine1"), t("aboutLine2")]}
+          accent={t("aboutAccent")}
+        />
+        <div className="about-copy" data-animated-content>
+          <p>{t("aboutCopy1")}</p>
+          <p>{t("aboutCopy2")}</p>
           <div className="skill-tags">
             {[
               "React",
